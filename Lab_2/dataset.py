@@ -83,9 +83,7 @@ class VinaFood21(Dataset):
         
         mean = np.array(self.mean)
         std = np.array(self.std)
-        image = (image - mean) / std  # 🔹 vẫn shape (224, 224, 3)
+        image = (image - mean) / std 
         
         label_id = self.label_list[item["label"]]
         return {"image": image, "label": label_id}
-
-

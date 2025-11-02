@@ -1,8 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 import torch
-from sklearn.metrics import accuracy_score, f1_score, precision_score, \
-                            recall_score, confusion_matrix
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 def train(model, dataloader, num_epochs, optimizer, loss_fn, device):
     model.train()
