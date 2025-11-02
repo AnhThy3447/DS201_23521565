@@ -4,7 +4,7 @@ import torch
 from sklearn.metrics import accuracy_score, f1_score, precision_score, \
                             recall_score, confusion_matrix
 
-def train(model, model_name, dataloader, num_epochs, optimizer, loss_fn, device):
+def train(model, dataloader, num_epochs, optimizer, loss_fn, device):
     model.train()
 
     print("----- Training -----")
@@ -39,7 +39,7 @@ def compute_score(preds, labels):
     print(f"Recall: {recall:.4f}")
     print(f"F1 Score: {f1:.4f}")
 
-def evaluate(model, model_name, test_dataloader, loss_fn, device):
+def evaluate(model, test_dataloader, loss_fn, device):
     model.eval()
     all_preds = []
     all_labels = []

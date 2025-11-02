@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from transformers import AutoImageProcessor, ResNetForImageClassification
+from transformers import ResNetForImageClassification
 
 class PretrainedResnet(nn.Module):
     def __init__(self, num_classes: int) -> None:
