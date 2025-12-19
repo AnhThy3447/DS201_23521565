@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from data_utils.dataset import PhoMTDataset, collate_fn
 from data_utils.vocab import Vocab
 from train_eval import train_epoch, evaluate
-from model.Seq2SeqLSTM import Seq2SeqLSTM
+from model.seq2seq import Seq2seq
 
 # ------ Define parameters ------
 src_language = "english"
@@ -14,7 +14,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # ------ Parse arguments ------
 parser = argparse.ArgumentParser()
-parser.add_argument("--model", type=str, default="LSTM")
+parser.add_argument("--attention", type=str, default="None")
 parser.add_argument("--lr", type=float, default=0.001)
 parser.add_argument("--batch_size", type=int, default=32)
 parser.add_argument("--num_epochs", type=int, default=10)
@@ -23,7 +23,7 @@ args = parser.parse_args()
 lr = args.lr
 batch_size = args.batch_size
 num_epochs = args.num_epochs
-model_name = args.model
+attention_name = args.attention
 
 # ------ Load Dataset ------
 vocab = Vocab(r'/workspaces/DS210/Lab_4/data', src_language, tgt_language)
@@ -56,20 +56,17 @@ test_dataloader = DataLoader(
 )
 
 # ------ Modeling ------
-print ("MODEL")
-if model_name == "LSTM":
-    model = Seq2SeqLSTM(vocab=vocab)
+model = Seq2seq(vocab=vocab, attention_type=attention_name)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=lr)
 
 # ------ Training ------
-print ("TRAINING")
-save_path = f"model/BestModel/best_model_{model_name}.pt"
+save_path = f"model/BestModel/best_model_{attention_name}.pt"
 train_epoch(model, train_dataloader, optimizer, criterion, num_epochs,
             val_dataloader, vocab, save_path, device)
 model.load_state_dict(torch.load(save_path))
 
 # ------ Evaluate ------
-print("----- Test Results ----")
+print("----- Test Results ----_")
 _, test_rouge = evaluate(model, test_dataloader, criterion, vocab, device)
 print(f"Test Rouge_L Score: {test_rouge:.4f}")

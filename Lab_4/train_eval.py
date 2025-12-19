@@ -12,11 +12,13 @@ def evaluate(model, dataloader, criterion, vocab, device):
     sample_count = 0
 
     with torch.no_grad():
-        for x, y in dataloader:
-            x, y = x.to(device), y.to(device)
+        for batch in dataloader:
+            x = batch['src_language'].to(device)
+            y = batch['tgt_language'].to(device)
             
             outputs = model(x, y[:, :-1]) 
             target = y[:, 1:]
+            target = target[:, :outputs.size(1)]
             
             loss = criterion(outputs.reshape(-1, outputs.size(-1)), target.reshape(-1))
             total_loss += loss.item()
@@ -73,4 +75,3 @@ def train_epoch(model, dataloader, optimizer, criterion, num_epoch,
             best_score = val_rouge
             torch.save(model.state_dict(), save_path)
             print(f"Best model saved at epoch {epoch+1}")
-
